@@ -1,52 +1,32 @@
-# orderbook-v2
+# Project Overview
+This project is an implementation of a distributed order book system using the service-oriented architecture provided by the svc CLI tool. The system is designed such that each client has its own instance of the order book and can submit orders to it. These orders are then distributed to other instances of the order book.
 
-## Setup
+## Key Features
+### Distributed Order Book: 
+Each client has its own instance of the order book, allowing for high scalability and performance.
 
-Run two Grapes:
+### Order Distribution: 
+When a client submits an order, it is distributed to all other instances of the order book. This ensures that all clients have a consistent view of the market.
 
-```
-grape --dp 20001 --aph 30001 --bn '127.0.0.1:20002'
-grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
-```
+### Order Matching:
+If a client's order matches with another order, any remainder is added back to the order book. This ensures that all orders are fully executed.
 
-```
-# Add base as upstream:
-git remote add upstream https://github.com/bitfinexcom/bfx-util-js
+### Implementation Details:
 
-# Configure service:
-bash setup-config.sh
-```
+The system was implemented using the svc CLI tool, which provides a framework for building service-oriented architectures. The order book was implemented as a simple buy/sell order system.
 
+One of the main challenges faced during the implementation was figuring out how to communicate between workers using the pub/sub pattern in the svc architecture. While basic Grenache scripts provide a way to communicate between workers, they were not sufficient for this project.
 
-### Boot worker
+To solve this problem, the system was designed to sync the order book status by emitting it after each order execution. This ensures that all workers have a consistent view of the order book.
 
-```
-node worker.js --env=development --wtype=wrk-orderbook-v2-api --apiPort 1337
-```
+Additionally, to ensure the consistency of the distributed order book, the state of the order book is written to the DHT using Grenache's put method. This creates a versioned history of the order book, ensuring that clients always get the updated version and cannot mutate a version that has already been written.
 
-## Grenache API
+### Challenges:
+Lack of IntelliSense: As the project is implemented in JavaScript, not TypeScript, there was a lack of IntelliSense support which made the development process more challenging.
 
-### action: 'getHelloWorld'
+Insufficient Documentation: The documentation for the bfx-wrk-api library was not comprehensive enough, which made it difficult to understand how to use it effectively.
 
-  - `args <Array>`
-    - `0 <Object>`
-      - `name <String>` Name to greet
+### Missing requirements
+1- isolating worker for each client
 
-
-**Response:**
-
-  - `<String>` The Greeting
-
-**Example Payload:**
-
-```js
-args: [ { name: 'Paolo' } ]
-```
-
-**Example Response:**
-
-```js
-'Hello Paolo'
-```
-
-Example: [example.js](example.js)
+2- syncing orderbook status between different workers
