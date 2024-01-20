@@ -2,12 +2,6 @@
 This project is an implementation of a distributed order book system using the service-oriented architecture provided by the svc CLI tool. The system is designed such that each client has its own instance of the order book and can submit orders to it. These orders are then distributed to other instances of the order book.
 
 ## Key Features
-### Distributed Order Book: 
-Each client has its own instance of the order book, allowing for high scalability and performance.
-
-### Order Distribution: 
-When a client submits an order, it is distributed to all other instances of the order book. This ensures that all clients have a consistent view of the market.
-
 ### Order Matching:
 If a client's order matches with another order, any remainder is added back to the order book. This ensures that all orders are fully executed.
 
