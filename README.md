@@ -1,12 +1,52 @@
-# bfx-util
+# orderbook-v2
 
 ## Setup
 
-The project inherits code from a base repository.
+Run two Grapes:
 
-All new repositories should inheritate from the closest parent: `bfx-util-net-js` inherits from `bfx-util-js`; `bfx-util-js` inheritates from `bfx-svc-js` (the root service repository)
+```
+grape --dp 20001 --aph 30001 --bn '127.0.0.1:20002'
+grape --dp 20002 --aph 40001 --bn '127.0.0.1:20001'
+```
 
-Add it with:
+```
+# Add base as upstream:
+git remote add upstream https://github.com/bitfinexcom/bfx-util-js
 
-* File names: parent is rightmost (i.e `api.net.util.wrk.js` : wrk>util>net>api)
-* Class names: parent is leftmost (i.e `WkrUtilNetApi`)
+# Configure service:
+bash setup-config.sh
+```
+
+
+### Boot worker
+
+```
+node worker.js --env=development --wtype=wrk-orderbook-v2-api --apiPort 1337
+```
+
+## Grenache API
+
+### action: 'getHelloWorld'
+
+  - `args <Array>`
+    - `0 <Object>`
+      - `name <String>` Name to greet
+
+
+**Response:**
+
+  - `<String>` The Greeting
+
+**Example Payload:**
+
+```js
+args: [ { name: 'Paolo' } ]
+```
+
+**Example Response:**
+
+```js
+'Hello Paolo'
+```
+
+Example: [example.js](example.js)
