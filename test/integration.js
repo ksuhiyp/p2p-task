@@ -40,7 +40,7 @@ describe('RPC integration', () => {
   it('hello world: retrieves hello world', (done) => {
     const query = {
       action: 'getHelloWorld',
-      args: [ { name: 'Paolo' } ]
+      args: [{ name: 'Paolo' }]
     }
 
     client.request(query, (err, res) => {
